@@ -71,3 +71,45 @@ class CurrentUserView(APIView):
     def get(self, request):
         serializer = UserSerializer(request.user) # Serialize the current user
         return Response(serializer.data)
+
+class UpdateProfileView(generics.UpdateAPIView):
+    """
+    API endpoint for updating the user profile (username, email).
+    """
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = UserSerializer
+    http_method_names = ['patch'] # Only allow PATCH requests
+
+    def get_object(self):
+        return self.request.user
+
+    def patch(self, request, *args, **kwargs):
+        user = self.get_object()
+        serializer = self.get_serializer(user, data=request.data, partial=True)
+        if serializer.is_valid():
+            user.first_name = serializer.validated_data.get('first_name', user.first_name)
+            user.last_name = serializer.validated_data.get('last_name', user.last_name)
+            user.save()
+            return Response(UserSerializer(user).data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class ChangePasswordView(generics.UpdateAPIView):
+    """
+    API endpoint for changing the user's password.
+    """
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
+
+    def update(self, request, *args, **kwargs):
+        user = self.get_object()
+        old_password = request.data.get("old_password")
+        new_password = request.data.get("new_password")
+
+        if not user.check_password(old_password):
+            return Response({"old_password": ["Wrong password. Please enter the correct old password."]}, status=status.HTTP_400_BAD_REQUEST)
+
+        user.set_password(new_password)
+        user.save()
+        return Response({"status": "password changed"}, status=status.HTTP_200_OK)

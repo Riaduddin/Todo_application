@@ -90,7 +90,12 @@ const authSlice = createSlice({
     resetAuthStatus: (state) => {
         state.status = 'idle';
         state.error = null;
-    }
+    },
+    updateUser: (state, action) => {
+      // Update user information in the state and localStorage
+      state.user = { ...state.user, first_name: action.payload.first_name, last_name: action.payload.last_name };
+      localStorage.setItem('user', JSON.stringify(state.user));
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -128,7 +133,7 @@ const authSlice = createSlice({
   },
 });
 
-export const { logout, resetAuthStatus } = authSlice.actions;
+export const { logout, resetAuthStatus, updateUser } = authSlice.actions;
 
 // Selectors
 export const selectCurrentUser = (state) => state.auth.user;

@@ -1,11 +1,10 @@
 # Active Context: Modern To-Do Application
 
 ## Current Work Focus
--   **Core Features Implemented:** Backend API and Frontend UI for core task management (CRUD), user authentication (Register/Login/Logout), and task filtering (All/Active/Completed) are functional.
+-   **Core Features Implemented:** Backend API and Frontend UI for core task management (CRUD), user authentication (Register/Login/Logout), task filtering (All/Active/Completed), task sorting, drag-and-drop reordering, and Dark/Light mode theme switching are functional.
 -   **Next Steps:**
-    -   Implement remaining UI/UX features (Dark Mode, animations).
-    -   Implement sorting functionality.
     -   Refine styling and responsiveness.
+    -   Implement Tagging system.
     -   Testing.
 
 ## Recent Changes
@@ -30,10 +29,16 @@
     -   Implemented basic `SettingsPage` display.
     -   Added task sorting functionality to Dashboard.
     -   Implemented visual drag-and-drop reordering using `@dnd-kit`.
--   **Backend:** (Previous changes)
-    -   Created `tasks` app, defined `Task` model, applied migrations.
-    -   Created serializers, views (ViewSet, CreateView), and URLs for tasks and user registration.
-    -   Configured main URLs.
+    -   Fixed Dark/Light mode theme switching by adding `darkMode: 'class'` to `tailwind.config.js`.
+    -   Enhanced `SettingsPage.jsx` to:
+        -   Remove the email field from the update profile form.
+        -   Add first name and last name fields to the update profile form.
+        -   Update the `handleProfileUpdate` function to send the `first_name` and `last_name` to the backend.
+    -   Updated the `updateUser` action in `authSlice` to handle the `first_name` and `last_name` fields.
+-   **Backend:**
+    -   Created API endpoints for updating user profile and changing password (`UpdateProfileView`, `ChangePasswordView`).
+    -   Configured URLs for these endpoints in `backend/tasks/urls.py`.
+    -   Updated `UpdateProfileView` to handle `first_name` and `last_name`.
 
 ## Active Decisions & Considerations
 -   Following the technical stack and architecture outlined in `projectbrief.md` and `systemPatterns.md`, with the exception of the database.
@@ -48,4 +53,5 @@
 -   Keep Memory Bank files updated consistently.
 
 ## Learnings & Project Insights
--   Project setup phase. No specific implementation insights yet.
+-   **Theme Management:** Dark/Light mode state is managed locally within `App.jsx` using `useState` and persisted in `localStorage`. It is *not* currently part of the Redux store. The theme state and toggle function are passed down as props (e.g., to `Navbar`).
+-   Tailwind's `darkMode: 'class'` configuration is essential for class-based theme switching to work correctly.

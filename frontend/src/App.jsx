@@ -49,7 +49,7 @@ function App() {
       <Navbar theme={theme} toggleTheme={toggleTheme} />
 
       {/* Apply dark mode classes to main content area and make it grow */}
-      <main className="p-4 bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 flex-grow">
+      <main className={`p-4 ${theme === 'light' ? 'bg-gray-100 text-gray-900' : 'bg-gray-900 text-gray-100'} flex-grow`}>
         <Routes>
           {/* Public routes */}
           <Route path="/login" element={<LoginPage />} />

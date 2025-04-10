@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import TaskViewSet, UserCreate, CurrentUserView # Import CurrentUserView
+from .views import TaskViewSet, UserCreate, CurrentUserView, UpdateProfileView, ChangePasswordView # Import CurrentUserView
 
 # Create a router and register our viewsets with it.
 router = DefaultRouter()
@@ -12,4 +12,6 @@ urlpatterns = [
     path('', include(router.urls)), # Includes /tasks/ and /tasks/{id}/
     path('register/', UserCreate.as_view(), name='user_register'),
     path('users/me/', CurrentUserView.as_view(), name='current_user'), # Add path for current user
+    path('users/me/update/', UpdateProfileView.as_view(), name='update_profile'),
+    path('users/me/password/', ChangePasswordView.as_view(), name='change_password'),
 ]
